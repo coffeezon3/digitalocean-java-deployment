@@ -1,5 +1,86 @@
-Demo Project: Create Server and Deploy Java Application on DigitalOcean
+Demo Projekt: Java-Anwendung auf einem DigitalOcean-Droplet deployen
 
+Technologien:
+
+Java
+
+Gradle
+
+Ubuntu Linux
+
+DigitalOcean
+
+Projektstruktur
+digitalocean-java-deployment/
+├── src/main/java/Main.java
+├── build.gradle
+├── .gitignore
+└── README.md
+
+
+src/main/java → Quellcode
+
+build.gradle → Gradle Build-Konfiguration
+
+.gitignore → ignoriert Build-Artefakte, .jar, IntelliJ-Dateien
+
+Server Setup (DigitalOcean)
+
+Droplet auf DigitalOcean erstellen (Ubuntu)
+
+Neuen User anlegen (Security Best Practice):
+
+adduser demo
+usermod -aG sudo demo
+
+
+SSH-Key für demo einrichten:
+
+# lokal erzeugen
+ssh-keygen -t ed25519 -C "demo@digitalocean"
+# öffentlichen Key auf Droplet kopieren
+scp ~/.ssh/id_ed25519.pub demo@<DROPLET_IP>:/home/demo/.ssh/authorized_keys
+
+Projekt Deployment
+
+Repo klonen
+
+git clone git@github.com:coffeezon3/digitalocean-java-deployment.git
+cd digitalocean-java-deployment
+
+
+Build erzeugen
+
+gradle build
+
+
+.jar Datei liegt in build/libs/digitalocean-java-deployment-1.0.0.jar
+
+JAR auf Droplet kopieren
+
+scp build/libs/digitalocean-java-deployment-1.0.0.jar demo@<DROPLET_IP>:/home/demo/
+
+
+Auf Droplet ausführen
+
+ssh demo@<DROPLET_IP>
+java -jar digitalocean-java-deployment-1.0.0.jar
+
+
+Ausgabe: Hello DigitalOcean!
+
+Hinweise
+
+.jar Dateien werden nicht ins Repo gepusht – sie können jederzeit mit Gradle gebaut werden
+
+Sicherheitsbestpractice: kein Root-Zugriff für tägliche Nutzung, eigener User für Deployment
+
+Repo enthält nur Quellcode und Konfiguration; Build-Artefakte werden lokal oder auf Droplet erzeugt
+
+
+
+Demo Project: Create Server and Deploy Java Application on DigitalOcean
+---------------------------------------------
 Module: 5 – Cloud & Infrastructure as a Service (IaaS) Basics
 Bootcamp: TWN DEV Bootcamp
 
